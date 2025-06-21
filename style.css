@@ -1,0 +1,38 @@
+body {
+    background-color:forestgreen;
+}
+
+img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.place {
+    height: 125px;
+    width: 81.7px;
+    border: 2px solid #ffffff;
+}
+
+section {
+    display: flex;
+    margin-top: 30px;
+}
+
+#foundation-section {
+    padding-left: 60%;
+    padding-right: 5%;
+    justify-content: space-around;
+}
+
+#active-section {
+    padding-left: 20%;
+    padding-right: 20%;
+    justify-content: space-around;
+    margin-bottom: 100px;
+}
+
+#deck-section {
+    padding-left: 10%;
+    padding-right: 70%;
+    justify-content: space-around;
+}
