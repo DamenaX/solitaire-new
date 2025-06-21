@@ -2,6 +2,10 @@ let deckArr = [];
 let activePlaceArr = [];
 let foundationPlaceArr = [];
 
+// making the two arrays two dimensional so each nested arrray representents a "place" box.
+for (let i = 0; i < 7; i++) activePlaceArr[i] = [];
+for (let i = 0; i < 4; i++) foundationPlaceArr[i] = [];
+
 // The loop initiates the deck (fills it with the 52 standard cards.)
 for (let i = 0; i < 13; i++) {
     let rank;
@@ -55,3 +59,12 @@ function shuffleDeck() {
         
 }
 
+function deal() {
+    shuffleDeck();
+    for (let i = 7; i > 0; i--) {
+        let toBeRemoved = deckArr.splice(-i,i);
+        for (let j = 0; j < 7; j++) {
+            activePlaceArr[j].push(toBeRemoved[j]);
+        }
+    }
+}
