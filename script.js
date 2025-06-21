@@ -1,25 +1,57 @@
-const cards = document.getElementsByClassName("card");
-const places = document.getElementsByClassName("place");
+let deckArr = [];
+let activePlaceArr = [];
+let foundationPlaceArr = [];
 
-//Save the ID of the dragged card when dragging starts on each card
-for (card of cards) { 
-    card.addEventListener("dragstart", (e) => {
-        e.dataTransfer.setData("text/plain", e.target.id);
-    })
-}
-
-
-// Prevent default behaviour when drag is over and append the dragged card when dropped.
-for (place of places) {
-    place.addEventListener("dragover", (e) => {
-        e.preventDefault();
-    })
-
-    place.addEventListener("drop", (e) => {
-        console.log("there");
-        let draggedCard = e.dataTransfer.getData("text/plain");
-        if (e.target.classList.contains("place")) {
-            e.target.append(document.getElementById(draggedCard));
+// The loop initiates the deck (fills it with the 52 standard cards.)
+for (let i = 0; i < 13; i++) {
+    let rank;
+    switch (i) {
+        case 0: rank = "A"; break;
+        case 10: rank = "J"; break;
+        case 11: rank = "Q"; break;
+        case 12: rank = "K"; break;
+        default: rank = i;
+    }
+    for (let j = 0; j < 4; j++){
+        let suit;
+        switch (j) {
+            case 0: suit = "H"; break;
+            case 1: suit = "D"; break;
+            case 2: suit = "S"; break;
+            case 3: suit = "C"; break;
         }
-    })
+        deckArr.push(`${rank}${suit}`);
+    }
 }
+
+// function for Shuffling the deck
+function shuffleDeck() {
+    let deckCopy = [...deckArr];
+    let randUniqueIndex;
+    let listOfProccessedIndex =[];
+
+    for (let i = 0; i < deckArr.length; i++) {
+        generateUniqueIndex();
+        deckArr[i] = deckCopy[randUniqueIndex];
+    }
+
+    function isIndexUnique(randIndex) {
+        if (listOfProccessedIndex.indexOf(randIndex) === -1) {
+            listOfProccessedIndex.push(randIndex);
+            return true;
+        } 
+        else {
+            return false;
+        }
+    }
+
+    function generateUniqueIndex() {
+        do {
+            randUniqueIndex = Math.floor(Math.random() * deckCopy.length);
+        } while (!isIndexUnique(randUniqueIndex))
+        
+        return randUniqueIndex;
+    }
+        
+}
+
