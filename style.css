@@ -5,12 +5,15 @@ body {
 img {
     max-height: 100%;
     max-width: 100%;
+    position: absolute;
 }
 
 .place {
     height: 125px;
     width: 81.7px;
     border: 2px solid #ffffff;
+    overflow: unset;
+    position: relative;
 }
 
 section {
