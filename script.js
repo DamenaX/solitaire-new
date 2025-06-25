@@ -10,6 +10,7 @@ const Aplaces = document.getElementsByClassName("active-place");
 const foundationPlaces = document.getElementsByClassName("foundation-place");
 const deckPile = document.getElementById("deck-pile");
 const revealPlace = document.getElementById("reveal-place");
+const newGameButtons = document.getElementsByClassName("newgame");
 
 // making the two arrays two dimensional so each nested arrray representents a "place" box.
 for (let i = 0; i < 7; i++) activePlaceArr[i] = [];
@@ -41,6 +42,7 @@ for (place of places) { // setup the places to accept cards
         move(draggedCardID, target);
     })
 }
+
 
 // The loop initiates the deck (fills it with the 52 standard cards.)
 function initiateDeck() {
@@ -261,7 +263,7 @@ function move(cardID, target) {
 }
 
 function revealOne() {
-    if (!deckArr.length) gameOver();
+    if (!deckArr.length) deckPile.removeChild(deckPile.firstChild);
     let revealCard = document.createElement("img");
     revealCard.id = deckArr.pop();
     revealCard.classList.add("card")
@@ -311,19 +313,91 @@ function isGameWon() {
         if (foundationPlaces[i].children.length === 13) numFullFoundations++;
         console.log(numFullFoundations);
     }
-    
+
     if (numFullFoundations === 4) {
         GameWon();
         console.log("You won")
     } else return false;
- }
- 
- function GameWon() {
+}
+
+function GameWon() {
     const gameWonBox = document.getElementById("gamewon-box");
     gameWonBox.classList.toggle("hidden-content");
- }
+}
+
+function newGame() {
+    deckArr = [];
+    activePlaceArr = [];
+    foundationPlaceArr = [];
+    hasBeenDealt = false;
+    cardsBelow = [];
+
+    for (let i = 0; i < 7; i++) activePlaceArr[i] = [];
+    for (let i = 0; i < 4; i++) foundationPlaceArr[i] = [];
+    for (place of places) { // setup the places to accept cards
+        place.addEventListener("dragover", (e) => {
+            e.preventDefault();
+        })
+        place.addEventListener("drop", (e) => {
+            let draggedCardID = e.dataTransfer.getData("text/plain");
+            let target = e.target;
+            console.log(target);
+            move(draggedCardID, target);
+        })
+    }
+    for (card of cards) { // Capture the ID of the dragged card
+        card.addEventListener("dragstart", (e) => {
+            e.dataTransfer.setData("text/plain", e.target.id);
+
+            cardsBelow = [];
+            let nodeArray = Array.from(e.target.parentElement.children);
+            let currentPosition = nodeArray.indexOf(e.target);
+            console.log("current position: " + currentPosition);
+
+            for (let i = currentPosition + 1; i < nodeArray.length; i++) {
+                cardsBelow.push(e.target.parentElement.children[i]);
+            } console.log(cardsBelow);
+        })
+    }
+
+    initiateDeck();
+    for (Aplace of Aplaces) {
+        Aplace.innerHTML = "";
+    }
+    for (place of foundationPlaces) {
+        place.innerHTML = "";
+    }
+    if (revealPlace.children.length) revealPlace.removeChild(revealPlace.firstChild);
+}
+
+function confirm() {
+
+    const confirmationBox = document.getElementById("confirmation-box");
+    confirmationBox.classList.toggle("hidden-content");
+    const confirmButton = document.getElementById("confirm-button");
+    const cancelButton = document.getElementById("cancel-button");
+    confirmButton.addEventListener("click", () => {
+        confirmationBox.classList.add("hidden-content");
+        newGame();
+       
+    })
+    cancelButton.addEventListener("click", () => {
+        confirmationBox.classList.add("hidden-content");
+    })
+
+
+}
+
+
+
 
 deckPile.addEventListener("click", () => {
     deal();
     revealOne();
 })
+
+for (button of newGameButtons) {
+    button.addEventListener("click", () => {
+        confirm();
+    })
+}

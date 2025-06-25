@@ -6,6 +6,7 @@
     </head>
 
     <body>
+        <button class="newgame" id="newgamelink">New Game</button>
         <section id="foundation-section">
             <div class="foundation-place place" id="f-place-one"></div>
             <div class="foundation-place place" id="f-place-two"></div>
@@ -33,7 +34,7 @@
         </section>
 
         
-        <div id="welcome-box" class="">
+        <div id="welcome-box" class="msg-box">
             <div id="welcome-content">
                 <h1>Welcome to my Game!</h1>
                 <p>This is a Solitaire game. Not spider solitaire! it follows the standard Klondike rules
@@ -46,23 +47,34 @@
             </div>
         </div>
 
-        <div id="gameover-box" class="hidden-content">
+        <div id="gameover-box" class="hidden-content msg-box">
             <div id="gameover-content">
                 <h1>Game Over</h1>
                 <p> You ran out of moves and deck pile!
                 </p>
                 <h2>Wanna play again?</h2>
-                <button id="newgame-button">New Game</button>
+                <button id="newgame-button" class="newgame">New Game</button>
             </div>
         </div>
 
-        <div id="gamewon-box" class="hidden-content">
+        <div id="gamewon-box" class="hidden-content msg-box">
             <div id="gamewon-content">
                 <h1>Congrats, You Won!</h1>
                 <p> Thank you for playing.
                 </p>
                 <h2>Wanna play again?</h2>
                 <button id="newgame-button" class="newgame">New Game</button>
+            </div>
+        </div>
+
+        <div id="confirmation-box" class="hidden-content msg-box">
+            <div id="confirmation-content">
+                <h1>New Game</h1>
+                <p> Your Current Progress will be lost.
+                </p>
+                <h2>Continue?</h2>
+                <button id="confirm-button" class="confirm">Confirm</button>
+                <button id="cancel-button" class="canceling">Cancel</button>
             </div>
         </div>
 
