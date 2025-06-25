@@ -65,6 +65,15 @@ function initiateDeck() {
     }
 }; initiateDeck();
 
+(function welcome() {
+    const welcomeBox = document.getElementById("welcome-box");
+    const okButton = document.getElementById("close-button");
+
+    okButton.addEventListener("click", () => {
+        welcomeBox.classList.toggle("hidden-content");
+    })
+}) ();
+
 // function for Shuffling the deck
 function shuffleDeck() {
     let deckCopy = [...deckArr];
@@ -218,13 +227,17 @@ function move(cardID, target) {
 }
 
 function revealOne() {
-    if (!revealPlace.children.length) {
+        if (!deckArr.length) gameOver();
         let revealCard = document.createElement("img");
         revealCard.id = deckArr.pop();
         revealCard.classList.add("card")
         revealCard.src = `img/${revealCard.id}.jpg`;
+        if (revealPlace.children.length) {
+            deckArr.unshift(revealPlace.firstElementChild.id);
+            revealPlace.removeChild(revealPlace.firstElementChild);
+        }
         revealPlace.append(revealCard);
-    }
+    
     for (card of cards) { // Capture the ID of the dragged card
         card.addEventListener("dragstart", (e) => {
             e.dataTransfer.setData("text/plain", e.target.id);
@@ -257,6 +270,8 @@ function idToRank(id) {
 function idToSuit(id) {
     return id[id.length - 1];
 }
+
+function gameOver() {}
 
 deckPile.addEventListener("click", () => {
     deal();

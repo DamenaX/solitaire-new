@@ -39,3 +39,33 @@ section {
     padding-right: 70%;
     justify-content: space-around;
 }
+
+#welcome-box, #gameover-box {
+    width: 650px;
+    max-height: 300px;
+    border: 2px solid #132a13; 
+    border-radius: 15px;
+    background-color: rgb(65, 184, 65);
+    position: absolute;
+    left: 25%;
+    right: 60%;
+    top: 20%;
+    text-align: center;
+    font-family:'Courier New', Courier, monospace;
+    padding: 15px 35px 15px 35px;
+}
+
+#welcome-box button, #gameover-box button {
+    width: 150px;
+    height: 30px;
+    background-color: forestgreen;
+    border-radius: 7%;
+}
+
+#welcome-box p {
+    text-align: justify;
+}
+
+.hidden-content {
+    display: none;
+}
