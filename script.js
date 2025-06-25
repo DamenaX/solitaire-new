@@ -6,14 +6,12 @@ const places = document.getElementsByClassName("place");
 const Aplaces = document.getElementsByClassName("active-place");
 const deckPile = document.getElementById("deck-pile");
 
-
-
 // making the two arrays two dimensional so each nested arrray representents a "place" box.
 for (let i = 0; i < 7; i++) activePlaceArr[i] = [];
 for (let i = 0; i < 4; i++) foundationPlaceArr[i] = [];
 
 // The loop initiates the deck (fills it with the 52 standard cards.)
-function initiateDeck () {
+function initiateDeck() {
     for (let i = 1; i <= 13; i++) {
         let rank;
         switch (i) {
@@ -23,7 +21,7 @@ function initiateDeck () {
             case 13: rank = "K"; break;
             default: rank = i;
         }
-        for (let j = 0; j < 4; j++){
+        for (let j = 0; j < 4; j++) {
             let suit;
             switch (j) {
                 case 0: suit = "H"; break;
@@ -41,7 +39,7 @@ function initiateDeck () {
 function shuffleDeck() {
     let deckCopy = [...deckArr];
     let randUniqueIndex;
-    let listOfProccessedIndex =[];
+    let listOfProccessedIndex = [];
 
     for (let i = 0; i < deckArr.length; i++) {
         generateUniqueIndex();
@@ -52,7 +50,7 @@ function shuffleDeck() {
         if (listOfProccessedIndex.indexOf(randIndex) === -1) {
             listOfProccessedIndex.push(randIndex);
             return true;
-        } 
+        }
         else {
             return false;
         }
@@ -62,34 +60,47 @@ function shuffleDeck() {
         do {
             randUniqueIndex = Math.floor(Math.random() * deckCopy.length);
         } while (!isIndexUnique(randUniqueIndex))
-        
+
         return randUniqueIndex;
     }
-        
+
 }
 
 function deal() {
     shuffleDeck();
     for (let i = 7; i > 0; i--) {
-        let toBeRemoved = deckArr.splice(-i,i);
-        console.log(toBeRemoved);
+        let toBeRemoved = deckArr.splice(-i, i);
         for (let j = 0; j < toBeRemoved.length; j++) {
-            console.log("length is:" + toBeRemoved.length);
-            activePlaceArr[j].unshift(toBeRemoved[j]);
-            let dealtCard = document.createElement("img")
-            dealtCard.id = toBeRemoved[j];
-            dealtCard.src = `img/${toBeRemoved[j]}.jpg`
-            Aplaces[toBeRemoved.length - 1].append(dealtCard)
-            topDisplacement = 20 * (Aplaces[toBeRemoved.length - 1].children.length - 1);
-            dealtCard.style.top =  `${topDisplacement}px`;
+            activePlaceArr[j].push(toBeRemoved[j]);
         }
-        
     }
+    activePlaceArr.reverse();
+    populateActivePlace();
     initiateDeck();
 }
+
+function populateActivePlace() {
+    let activePlaceArrCopy = activePlaceArr;
+    for (let i = 0; i < activePlaceArrCopy.length; i++) {
+        for (let j = 0; j < activePlaceArrCopy[i].length; j++) {
+            let dealtCard = document.createElement("img");
+            dealtCard.id = activePlaceArrCopy[i][j];
+            dealtCard.src = `img/${activePlaceArrCopy[i][j]}.jpg`;
+
+            Aplaces[i].append(dealtCard);
+            topDisplacement = 20 * (Aplaces[i].children.length - 1);
+            dealtCard.style.top = `${topDisplacement}px`;
+        }
+    }
+
+}
+
 
 deckPile.addEventListener("click", () => {
     deal();
 })
 
+function move() {
+
+}
 
