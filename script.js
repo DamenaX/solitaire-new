@@ -7,6 +7,7 @@ let cardsBelow = [];
 const cards = document.getElementsByClassName("card");
 const places = document.getElementsByClassName("place");
 const Aplaces = document.getElementsByClassName("active-place");
+const foundationPlaces = document.getElementsByClassName("foundation-place");
 const deckPile = document.getElementById("deck-pile");
 const revealPlace = document.getElementById("reveal-place");
 
@@ -72,7 +73,7 @@ function initiateDeck() {
     okButton.addEventListener("click", () => {
         welcomeBox.classList.toggle("hidden-content");
     })
-}) ();
+})();
 
 // function for Shuffling the deck
 function shuffleDeck() {
@@ -130,8 +131,8 @@ function populateActivePlaces() {
             dealtCard.setAttribute("draggable", "true");
             if (j === activePlaceArrCopy[i].length - 1) {
                 dealtCard.src = `img/${dealtCard.id}.jpg`;
-            } else { 
-                dealtCard.src = `img/Gray_back.jpg`; 
+            } else {
+                dealtCard.src = `img/Gray_back.jpg`;
                 dealtCard.classList.add("hidden");
             }
 
@@ -170,18 +171,49 @@ function move(cardID, target) {
     // moving onto a foundation place
     if (target.classList.contains("foundation-place") || target.parentElement.classList.contains("foundation-place")) {
         console.log("Dropping on foundation.")
-        if (target.classList.contains("place") && target.children.length === 0) { // when the foundation is empty
+
+        // when the foundation is empty
+        if (target.classList.contains("place") && target.children.length === 0) {
+
+            let sameSuitOrder = cardsBelow.every((card, index, array) => {
+                if (idToSuit(card.id) === cardSuit) return true;
+            });
+            if (sameSuitOrder) {
+                for (let i = cardsBelow.length; i > 0; i--) {
+                    console.log("appending below cards");
+                    target.append(cardsBelow[i]);
+                    topDisplacement = 20 * (cardsBelow[i].parentElement.children.length - 1);
+                    cardsBelow[i].style.top = `${topDisplacement}px`;
+                }
+            }
+
+
             if (cardRank === 1) {
                 target.append(draggedCard);
                 isMoveSuccesful = true;
+                isGameWon();
                 draggedCard.style.top = "0px";
             }
         }
 
-        else if (target.classList.contains("card")) { // when there are other cards in the foundation
-            console.log("there is a card here");
+        // when there are other cards in the foundation
+        else if (target.classList.contains("card")) {
+            let sameSuitOrder = cardsBelow.every((card, index, array) => {
+                if (idToSuit(card.id) === cardSuit) return true;
+            });
+            if (sameSuitOrder) {
+                for (let i = cardsBelow.length; i > 0; i--) {
+                    console.log("appending below cards");
+                    target.append(cardsBelow[i]);
+                    topDisplacement = 20 * (cardsBelow[i].parentElement.children.length - 1);
+                    cardsBelow[i].style.top = `${topDisplacement}px`;
+                }
+            }
+
             if (cardRank === targetRank + 1 && cardSuit === targetSuit) {
                 target.parentElement.append(draggedCard);
+                isMoveSuccesful = true;
+                isGameWon();
                 draggedCard.style.top = "0px";
             }
         }
@@ -217,27 +249,29 @@ function move(cardID, target) {
             }
         }
     }
-
-    if (isMoveSuccesful && prevCard.classList.contains("hidden")) {
-        prevCard.src = `img/${prevCard.id}.jpg`;
-        prevCard.classList.remove("hidden");
+    if (prevCard) {
+        if (isMoveSuccesful && prevCard.classList.contains("hidden")) {
+            prevCard.src = `img/${prevCard.id}.jpg`;
+            prevCard.classList.remove("hidden");
+        }
     }
+
 
 
 }
 
 function revealOne() {
-        if (!deckArr.length) gameOver();
-        let revealCard = document.createElement("img");
-        revealCard.id = deckArr.pop();
-        revealCard.classList.add("card")
-        revealCard.src = `img/${revealCard.id}.jpg`;
-        if (revealPlace.children.length) {
-            deckArr.unshift(revealPlace.firstElementChild.id);
-            revealPlace.removeChild(revealPlace.firstElementChild);
-        }
-        revealPlace.append(revealCard);
-    
+    if (!deckArr.length) gameOver();
+    let revealCard = document.createElement("img");
+    revealCard.id = deckArr.pop();
+    revealCard.classList.add("card")
+    revealCard.src = `img/${revealCard.id}.jpg`;
+    if (revealPlace.children.length) {
+        deckArr.unshift(revealPlace.firstElementChild.id);
+        revealPlace.removeChild(revealPlace.firstElementChild);
+    }
+    revealPlace.append(revealCard);
+
     for (card of cards) { // Capture the ID of the dragged card
         card.addEventListener("dragstart", (e) => {
             e.dataTransfer.setData("text/plain", e.target.id);
@@ -271,7 +305,23 @@ function idToSuit(id) {
     return id[id.length - 1];
 }
 
-function gameOver() {}
+function isGameWon() {
+    let numFullFoundations = 0;
+    for (let i = 0; i < 4; i++) {
+        if (foundationPlaces[i].children.length === 13) numFullFoundations++;
+        console.log(numFullFoundations);
+    }
+    
+    if (numFullFoundations === 4) {
+        GameWon();
+        console.log("You won")
+    } else return false;
+ }
+ 
+ function GameWon() {
+    const gameWonBox = document.getElementById("gamewon-box");
+    gameWonBox.classList.toggle("hidden-content");
+ }
 
 deckPile.addEventListener("click", () => {
     deal();

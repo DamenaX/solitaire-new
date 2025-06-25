@@ -40,7 +40,7 @@ section {
     justify-content: space-around;
 }
 
-#welcome-box, #gameover-box {
+#welcome-box, #gameover-box, #gamewon-box {
     width: 650px;
     max-height: 300px;
     border: 2px solid #132a13; 
@@ -55,7 +55,7 @@ section {
     padding: 15px 35px 15px 35px;
 }
 
-#welcome-box button, #gameover-box button {
+#welcome-box button, #gameover-box button, #gamewon-box button {
     width: 150px;
     height: 30px;
     background-color: forestgreen;
