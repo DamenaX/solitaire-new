@@ -23,11 +23,11 @@ for (card of cards) { // Capture the ID of the dragged card
         cardsBelow = [];
         let nodeArray = Array.from(e.target.parentElement.children);
         let currentPosition = nodeArray.indexOf(e.target);
-        console.log("current position: " + currentPosition);
+
 
         for (let i = currentPosition + 1; i < nodeArray.length; i++) {
             cardsBelow.push(e.target.parentElement.children[i]);
-        } console.log(cardsBelow);
+        }
     })
 }
 
@@ -38,7 +38,6 @@ for (place of places) { // setup the places to accept cards
     place.addEventListener("drop", (e) => {
         let draggedCardID = e.dataTransfer.getData("text/plain");
         let target = e.target;
-        console.log(target);
         move(draggedCardID, target);
     })
 }
@@ -151,11 +150,10 @@ function populateActivePlaces() {
             cardsBelow = [];
             let nodeArray = Array.from(e.target.parentElement.children);
             let currentPosition = nodeArray.indexOf(e.target);
-            console.log("current position: " + currentPosition);
 
             for (let i = currentPosition + 1; i < nodeArray.length; i++) {
                 cardsBelow.push(e.target.parentElement.children[i]);
-            } console.log(cardsBelow);
+            }
         })
     }
 }
@@ -169,10 +167,8 @@ function move(cardID, target) {
     let targetRank = (target.classList.contains("card")) ? idToRank(target.parentElement.lastChild.id) : null;
     let targetSuit = (target.classList.contains("card")) ? idToSuit(target.parentElement.lastChild.id) : null;
 
-    console.log("Card Id: " + cardID);
     // moving onto a foundation place
     if (target.classList.contains("foundation-place") || target.parentElement.classList.contains("foundation-place")) {
-        console.log("Dropping on foundation.")
 
         // when the foundation is empty
         if (target.classList.contains("place") && target.children.length === 0) {
@@ -182,7 +178,6 @@ function move(cardID, target) {
             });
             if (sameSuitOrder) {
                 for (let i = cardsBelow.length; i > 0; i--) {
-                    console.log("appending below cards");
                     target.append(cardsBelow[i]);
                     topDisplacement = 20 * (cardsBelow[i].parentElement.children.length - 1);
                     cardsBelow[i].style.top = `${topDisplacement}px`;
@@ -205,7 +200,6 @@ function move(cardID, target) {
             });
             if (sameSuitOrder) {
                 for (let i = cardsBelow.length; i > 0; i--) {
-                    console.log("appending below cards");
                     target.append(cardsBelow[i]);
                     topDisplacement = 20 * (cardsBelow[i].parentElement.children.length - 1);
                     cardsBelow[i].style.top = `${topDisplacement}px`;
@@ -231,7 +225,6 @@ function move(cardID, target) {
                 draggedCard.style.top = "0px";
                 topDisplacement = 0;
                 for (let i = 0; i < cardsBelow.length; i++) {
-                    console.log("appending below cards");
                     target.append(cardsBelow[i]);
                     topDisplacement = 20 * (cardsBelow[i].parentElement.children.length - 1);
                     cardsBelow[i].style.top = `${topDisplacement}px`;
@@ -240,13 +233,11 @@ function move(cardID, target) {
                 target.parentElement.append(draggedCard);
                 isMoveSuccesful = true;
                 for (let i = 0; i < cardsBelow.length; i++) {
-                    console.log("appending below cards");
                     target.parentElement.append(cardsBelow[i]);
                     topDisplacement = 20 * (cardsBelow[i].parentElement.children.length - 1);
                     cardsBelow[i].style.top = `${topDisplacement}px`;
                 }
                 topDisplacement = 20 * (target.parentElement.children.length - cardsBelow.length - 1);
-                console.log(topDisplacement);
                 draggedCard.style.top = `${topDisplacement}px`;
             }
         }
@@ -281,11 +272,10 @@ function revealOne() {
             cardsBelow = [];
             let nodeArray = Array.from(e.target.parentElement.children);
             let currentPosition = nodeArray.indexOf(e.target);
-            console.log("current position: " + currentPosition);
 
             for (let i = currentPosition + 1; i < nodeArray.length; i++) {
                 cardsBelow.push(e.target.parentElement.children[i]);
-            } console.log(cardsBelow);
+            }
         })
     }
 }
@@ -311,12 +301,10 @@ function isGameWon() {
     let numFullFoundations = 0;
     for (let i = 0; i < 4; i++) {
         if (foundationPlaces[i].children.length === 13) numFullFoundations++;
-        console.log(numFullFoundations);
     }
 
     if (numFullFoundations === 4) {
         GameWon();
-        console.log("You won")
     } else return false;
 }
 
@@ -341,7 +329,6 @@ function newGame() {
         place.addEventListener("drop", (e) => {
             let draggedCardID = e.dataTransfer.getData("text/plain");
             let target = e.target;
-            console.log(target);
             move(draggedCardID, target);
         })
     }
@@ -352,11 +339,10 @@ function newGame() {
             cardsBelow = [];
             let nodeArray = Array.from(e.target.parentElement.children);
             let currentPosition = nodeArray.indexOf(e.target);
-            console.log("current position: " + currentPosition);
 
             for (let i = currentPosition + 1; i < nodeArray.length; i++) {
                 cardsBelow.push(e.target.parentElement.children[i]);
-            } console.log(cardsBelow);
+            } 
         })
     }
 
