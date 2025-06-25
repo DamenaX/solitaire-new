@@ -8,6 +8,7 @@ const cards = document.getElementsByClassName("card");
 const places = document.getElementsByClassName("place");
 const Aplaces = document.getElementsByClassName("active-place");
 const deckPile = document.getElementById("deck-pile");
+const revealPlace = document.getElementById("reveal-place");
 
 // making the two arrays two dimensional so each nested arrray representents a "place" box.
 for (let i = 0; i < 7; i++) activePlaceArr[i] = [];
@@ -63,7 +64,6 @@ function initiateDeck() {
         }
     }
 }; initiateDeck();
-
 
 // function for Shuffling the deck
 function shuffleDeck() {
@@ -143,11 +143,6 @@ function populateActivePlaces() {
     }
 }
 
-
-deckPile.addEventListener("click", () => {
-    deal();
-})
-
 function move(cardID, target) {
     let draggedCard = document.getElementById(cardID);
     let cardRank = idToRank(cardID);
@@ -177,7 +172,7 @@ function move(cardID, target) {
     else {
         if (cardRank === targetRank - 1 || !targetRank) {
             let topDisplacement = 0;
-            if (target.classList.contains("place")) {
+            if (target.classList.contains("place") && target.id !== "reveal-place") {
                 target.append(draggedCard);
                 draggedCard.style.top = "0px";
                 topDisplacement = 0;
@@ -205,6 +200,29 @@ function move(cardID, target) {
 
 }
 
+function revealOne() {
+    if (!revealPlace.children.length) {
+        let revealCard = document.createElement("img");
+        revealCard.id = deckArr.pop();
+        revealCard.classList.add("card")
+        revealCard.src = `img/${revealCard.id}.jpg`;
+        revealPlace.append(revealCard);
+    }
+    for (card of cards) { // Capture the ID of the dragged card
+        card.addEventListener("dragstart", (e) => {
+            e.dataTransfer.setData("text/plain", e.target.id);
+
+            cardsBelow = [];
+            let nodeArray = Array.from(e.target.parentElement.children);
+            let currentPosition = nodeArray.indexOf(e.target);
+            console.log("current position: " + currentPosition);
+
+            for (let i = currentPosition + 1; i < nodeArray.length; i++) {
+                cardsBelow.push(e.target.parentElement.children[i]);
+            } console.log(cardsBelow);
+        })
+    }
+}
 
 function idToRank(id) {
     let numRank;
@@ -222,3 +240,8 @@ function idToRank(id) {
 function idToSuit(id) {
     return id[id.length - 1];
 }
+
+deckPile.addEventListener("click", () => {
+    deal();
+    revealOne();
+})
