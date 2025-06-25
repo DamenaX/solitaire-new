@@ -254,9 +254,10 @@ function move(cardID, target) {
 }
 
 function revealOne() {
-    if (!deckArr.length) deckPile.removeChild(deckPile.firstChild);
+    if (!deckArr.length) {deckPile.removeChild(deckPile.firstChild); return;}
     let revealCard = document.createElement("img");
     revealCard.id = deckArr.pop();
+
     revealCard.classList.add("card")
     revealCard.src = `img/${revealCard.id}.jpg`;
     if (revealPlace.children.length) {
@@ -305,6 +306,7 @@ function isGameWon() {
 
     if (numFullFoundations === 4) {
         GameWon();
+        numFullFoundations = 0;
     } else return false;
 }
 
