@@ -2,6 +2,7 @@ let deckArr = [];
 let activePlaceArr = [];
 let foundationPlaceArr = [];
 let hasBeenDealt;
+let cardsBelow = [];
 
 const cards = document.getElementsByClassName("card");
 const places = document.getElementsByClassName("place");
@@ -15,6 +16,15 @@ for (let i = 0; i < 4; i++) foundationPlaceArr[i] = [];
 for (card of cards) { // Capture the ID of the dragged card
     card.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("text/plain", e.target.id);
+
+        cardsBelow = [];
+        let nodeArray = Array.from(e.target.parentElement.children);
+        let currentPosition = nodeArray.indexOf(e.target);
+        console.log("current position: " + currentPosition);
+
+        for (let i = currentPosition + 1; i < nodeArray.length; i++) {
+            cardsBelow.push(e.target.parentElement.children[i]);
+        } console.log(cardsBelow);
     })
 }
 
@@ -118,15 +128,19 @@ function populateActivePlaces() {
     }
 
     for (card of cards) { // Capture the ID of the dragged card
-    card.addEventListener("dragstart", (e) => {
-        e.dataTransfer.setData("text/plain", e.target.id);
-        e.target.style.border = "1px solid red";
-    })
+        card.addEventListener("dragstart", (e) => {
+            e.dataTransfer.setData("text/plain", e.target.id);
 
-    card.addEventListener("click", (e) => {
-        
-    } )
-}
+            cardsBelow = [];
+            let nodeArray = Array.from(e.target.parentElement.children);
+            let currentPosition = nodeArray.indexOf(e.target);
+            console.log("current position: " + currentPosition);
+
+            for (let i = currentPosition + 1; i < nodeArray.length; i++) {
+                cardsBelow.push(e.target.parentElement.children[i]);
+            } console.log(cardsBelow);
+        })
+    }
 }
 
 
@@ -154,30 +168,43 @@ function move(cardID, target) {
 
         else if (target.classList.contains("card")) { // when there are other cards in the foundation
             console.log("there is a card here");
-            if (cardRank === targetRank+1 && cardSuit === targetSuit) {
+            if (cardRank === targetRank + 1 && cardSuit === targetSuit) {
                 target.parentElement.append(draggedCard);
                 draggedCard.style.top = "0px";
             }
         }
-    } 
+    }
     else {
         if (cardRank === targetRank - 1 || !targetRank) {
             let topDisplacement = 0;
             if (target.classList.contains("place")) {
                 target.append(draggedCard);
+                draggedCard.style.top = "0px";
                 topDisplacement = 0;
+                for (let i = 0; i < cardsBelow.length; i++) {
+                    console.log("appending below cards");
+                    target.append(cardsBelow[i]);
+                    topDisplacement = 20 * (cardsBelow[i].parentElement.children.length - 1);
+                    cardsBelow[i].style.top = `${topDisplacement}px`;
+                }
             } else if (target.classList.contains("card")) {
                 target.parentElement.append(draggedCard);
-                topDisplacement = 20 * (target.parentElement.children.length - 1);
+                for (let i = 0; i < cardsBelow.length; i++) {
+                    console.log("appending below cards");
+                    target.parentElement.append(cardsBelow[i]);
+                    topDisplacement = 20 * (cardsBelow[i].parentElement.children.length - 1);
+                    cardsBelow[i].style.top = `${topDisplacement}px`;
+                }
+                topDisplacement = 20 * (target.parentElement.children.length - cardsBelow.length - 1);
                 console.log(topDisplacement);
                 draggedCard.style.top = `${topDisplacement}px`;
             }
-            draggedCard.style.top = `${topDisplacement}px`;
-    }
+        }
     }
 
 
 }
+
 
 function idToRank(id) {
     let numRank;
