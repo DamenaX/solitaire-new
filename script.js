@@ -119,7 +119,12 @@ function populateActivePlaces() {
             dealtCard.id = activePlaceArrCopy[i][j];
             dealtCard.classList.add("card");
             dealtCard.setAttribute("draggable", "true");
-            dealtCard.src = `img/${activePlaceArrCopy[i][j]}.jpg`;
+            if (j === activePlaceArrCopy[i].length - 1) {
+                dealtCard.src = `img/${dealtCard.id}.jpg`;
+            } else { 
+                dealtCard.src = `img/Gray_back.jpg`; 
+                dealtCard.classList.add("hidden");
+            }
 
             Aplaces[i].append(dealtCard);
             topDisplacement = 20 * (Aplaces[i].children.length - 1);
@@ -144,19 +149,22 @@ function populateActivePlaces() {
 }
 
 function move(cardID, target) {
+    let isMoveSuccesful = false;
     let draggedCard = document.getElementById(cardID);
+    let prevCard = draggedCard.previousElementSibling;
     let cardRank = idToRank(cardID);
     let cardSuit = idToSuit(cardID)
     let targetRank = (target.classList.contains("card")) ? idToRank(target.parentElement.lastChild.id) : null;
     let targetSuit = (target.classList.contains("card")) ? idToSuit(target.parentElement.lastChild.id) : null;
 
     console.log("Card Id: " + cardID);
-
+    // moving onto a foundation place
     if (target.classList.contains("foundation-place") || target.parentElement.classList.contains("foundation-place")) {
         console.log("Dropping on foundation.")
         if (target.classList.contains("place") && target.children.length === 0) { // when the foundation is empty
             if (cardRank === 1) {
                 target.append(draggedCard);
+                isMoveSuccesful = true;
                 draggedCard.style.top = "0px";
             }
         }
@@ -169,11 +177,14 @@ function move(cardID, target) {
             }
         }
     }
+
+    // moving onto an active place
     else {
         if (cardRank === targetRank - 1 || !targetRank) {
             let topDisplacement = 0;
             if (target.classList.contains("place") && target.id !== "reveal-place") {
                 target.append(draggedCard);
+                isMoveSuccesful = true;
                 draggedCard.style.top = "0px";
                 topDisplacement = 0;
                 for (let i = 0; i < cardsBelow.length; i++) {
@@ -184,6 +195,7 @@ function move(cardID, target) {
                 }
             } else if (target.classList.contains("card")) {
                 target.parentElement.append(draggedCard);
+                isMoveSuccesful = true;
                 for (let i = 0; i < cardsBelow.length; i++) {
                     console.log("appending below cards");
                     target.parentElement.append(cardsBelow[i]);
@@ -195,6 +207,11 @@ function move(cardID, target) {
                 draggedCard.style.top = `${topDisplacement}px`;
             }
         }
+    }
+
+    if (isMoveSuccesful && prevCard.classList.contains("hidden")) {
+        prevCard.src = `img/${prevCard.id}.jpg`;
+        prevCard.classList.remove("hidden");
     }
 
 
